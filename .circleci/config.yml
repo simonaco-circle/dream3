@@ -5,6 +5,8 @@ jobs:
       - image: circleci/node:6-browsers
     steps:
       - checkout
+      - restore-cache:
+          key: dependency-cache-{{checksum "package.json"}}
       - run:
           name: install
           command: yarn install
@@ -14,4 +16,11 @@ jobs:
       - run:
           name: test
           command: yarn ng test --sr --no-progress
+      - run:
+          name: lint
+          command: yarn ng lint
+      - save-cache:
+          key: dependency-cache-{{checksum "package.json"}}
+          paths:
+            - node_modules
 
